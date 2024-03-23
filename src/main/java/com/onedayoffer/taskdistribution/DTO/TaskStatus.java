@@ -1,7 +1,13 @@
 package com.onedayoffer.taskdistribution.DTO;
 
 public enum TaskStatus {
-    APPOINTED,
-    IN_PROGRESS,
-    DONE
+    APPOINTED("1"),
+    IN_PROGRESS("2"),
+    DONE("13");
+
+    String id;
+
+    TaskStatus(String id) {
+        this.id = id;
+    }
 }
