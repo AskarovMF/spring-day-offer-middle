@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.modelmapper.internal.bytebuddy.description.method.MethodDescription;
 import org.springframework.data.domain.Sort;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -75,7 +76,15 @@ public class EmployeeService {
     }
 
     @Transactional
-    public void postNewTask(Integer employeeId, TaskDTO newTask) {
-        throw new java.lang.UnsupportedOperationException("implement postNewTask");
+    public void postNewTask(Integer employeeId, TaskDTO taskDTO) {
+        Optional<Employee> optionalEmployee = employeeRepository.findById(employeeId);
+        Type taskType = new TypeToken<Task>() {}.getType();
+        Task task = modelMapper.map(taskDTO, taskType);
+
+        if (optionalEmployee.isPresent()) {
+            Employee employee = optionalEmployee.get();
+            task.setEmployee(employee);
+            employee.getTasks().add(task);
+        }
     }
 }

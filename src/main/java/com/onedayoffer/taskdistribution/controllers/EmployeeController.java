@@ -3,10 +3,12 @@ package com.onedayoffer.taskdistribution.controllers;
 import com.onedayoffer.taskdistribution.DTO.EmployeeDTO;
 import com.onedayoffer.taskdistribution.DTO.TaskDTO;
 import com.onedayoffer.taskdistribution.DTO.TaskStatus;
+import com.onedayoffer.taskdistribution.repositories.entities.Task;
 import com.onedayoffer.taskdistribution.services.EmployeeService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -40,13 +42,14 @@ public class EmployeeController {
 
     @PatchMapping("{id}/tasks/{taskId}/status")
     @ResponseStatus(HttpStatus.OK)
-    public void changeTaskStatus(@PathVariable Integer id, @PathVariable String taskId) {
-        employeeService.changeTaskStatus(id, status);
+    public void changeTaskStatus(@PathVariable Integer id, @PathVariable Integer taskId, @RequestParam String newStatus) {
+        employeeService.changeTaskStatus(taskId, TaskStatus.valueOf(newStatus));
     }
 
-    @PostMapping("...")
+    @PostMapping(value = "{id}/tasks",
+    consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void postNewTask(/* some params */) {
-        //employeeService.postNewTask ...
+    public void postNewTask(@PathVariable Integer id, @RequestBody TaskDTO taskDTO) {
+        employeeService.postNewTask(id, taskDTO);
     }
 }
